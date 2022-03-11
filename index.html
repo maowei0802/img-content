@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="style/style.css" rel="stylesheet" type="text/css">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+</div>
+</body>
+<script type="module">
+    import {ajax} from "./utils/ajax.js";
+    init()
+    let container = document.querySelector('.container'),
+        data = [];
+
+    // 渲染图片列表
+    function renderImgList(res) {
+        data = res
+        let len = data.length;
+        let result = ''
+        for (let i = 0; i < len; i++) {
+            result += `
+                <img customize="${i}" src="${data[i].img}">
+            `
+        }
+        container.innerHTML = result
+        container.addEventListener("click", clickList)
+    }
+
+    // 初始化函数
+    function init() {
+        ajax().then((res) => {
+            renderImgList(res)
+        })
+    }
+
+    // 点击图片/返回事件
+    function clickList(e) {
+        if (e.target.nodeName === "IMG") {
+            let customize = e.target.getAttribute('customize')
+            container.innerHTML = `
+                <p>${data[customize].content}</p>
+                <button>返回</button>
+            `
+        } else if (e.target.nodeName === "BUTTON") {
+            init()
+        }
+    }
+</script>
+</html>
